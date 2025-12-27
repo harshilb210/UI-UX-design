@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Tracker App</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f2f6f9;
+    display: flex;
+    justify-content: center;
+  }
+
+  .app {
+    width: 360px;
+    min-height: 100vh;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 20px;
+  }
+
+  header {
+    text-align: center;
+    padding-bottom: 10px;
+  }
+
+  header h1 {
+    color: #4CAF50;
+    margin: 0;
+  }
+
+  header p {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .add-habit {
+    display: flex;
+    gap: 8px;
+    margin: 15px 0;
+  }
+
+  .add-habit input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .add-habit button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .habit-list {
+    margin-top: 10px;
+  }
+
+  .habit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7f7f7;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .habit.completed {
+    background: #d8f3dc;
+    text-decoration: line-through;
+  }
+
+  .habit span {
+    font-size: 15px;
+  }
+
+  .habit button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .progress {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .progress h3 {
+    margin-bottom: 8px;
+    color: #333;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #4CAF50;
+    transition: width 0.3s;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #777;
+  }
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header>
+    <h1>🌱 Habit Tracker</h1>
+    <p>Build healthy habits every day</p>
+  </header>
+
+  <div class="add-habit">
+    <input type="text" id="habitInput" placeholder="Add a new habit...">
+    <button onclick="addHabit()">+</button>
+  </div>
+
+  <div class="habit-list" id="habitList">
+    <!-- Habits appear here -->
+  </div>
+
+  <div class="progress">
+    <h3>Daily Progress</h3>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <footer>
+    Stay consistent. Small steps matter 💚
+  </footer>
+
+</div>
+
+<script>
+  let habits = [];
+
+  function addHabit() {
+    const input = document.getElementById("habitInput");
+    const habitText = input.value.trim();
+
+    if (habitText === "") return;
+
+    habits.push({ text: habitText, completed: false });
+    input.value = "";
+    renderHabits();
+  }
+
+  function toggleHabit(index) {
+    habits[index].completed = !habits[index].completed;
+    renderHabits();
+  }
+
+  function renderHabits() {
+    const list = document.getElementById("habitList");
+    list.innerHTML = "";
+
+    habits.forEach((habit, index) => {
+      const div = document.createElement("div");
+      div.className = "habit" + (habit.completed ? " completed" : "");
+      div.innerHTML = `
+        <span>${habit.text}</span>
+        <button onclick="toggleHabit(${index})">
+          ${habit.completed ? "✓" : "Done"}
+        </button>
+      `;
+      list.appendChild(div);
+    });
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    if (habits.length === 0) {
+      document.getElementById("progressFill").style.width = "0%";
+      return;
+    }
+
+    const completed = habits.filter(h => h.completed).length;
+    const percent = (completed / habits.length) * 100;
+    document.getElementById("progressFill").style.width = percent + "%";
+  }
+</script>
+</body>
+</html>
