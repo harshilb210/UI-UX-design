@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DesignCollab – UI/UX Freelancers</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+}
+
+header {
+  background: #1f2933;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.section {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.section h2 {
+  margin-top: 0;
+  color: #1f2933;
+}
+
+/* Job Cards */
+.job {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.job:last-child {
+  border-bottom: none;
+}
+
+.job button {
+  margin-top: 5px;
+  padding: 6px 10px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Profile Cards */
+.profile {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.profile-info h4 {
+  margin: 0;
+}
+
+.tag {
+  background: #e0e7ff;
+  color: #1e3a8a;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+/* Proposal */
+textarea {
+  width: 100%;
+  height: 70px;
+  margin-top: 5px;
+}
+
+button.submit {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  background: #10b981;
+  border: none;
+  color: white;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Chat */
+.chat-box {
+  border: 1px solid #ddd;
+  height: 200px;
+  padding: 10px;
+  overflow-y: auto;
+  margin-bottom: 5px;
+}
+
+.message {
+  margin-bottom: 6px;
+}
+
+.message.client {
+  color: #1d4ed8;
+}
+
+.message.designer {
+  color: #047857;
+}
+
+input.chat-input {
+  width: 100%;
+  padding: 8px;
+}
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎨 DesignCollab</h1>
+  <p>Freelance Platform for UI/UX Designers</p>
+</header>
+
+<div class="container">
+
+  <!-- Job Posting Section -->
+  <div class="section">
+    <h2>📄 Job Listings</h2>
+
+    <div class="job">
+      <h4>Mobile App UI Design</h4>
+      <p>Need a modern fintech app UI</p>
+      <button onclick="selectJob('Mobile App UI Design')">Apply</button>
+    </div>
+
+    <div class="job">
+      <h4>Website Redesign</h4>
+      <p>Redesign landing page UX</p>
+      <button onclick="selectJob('Website Redesign')">Apply</button>
+    </div>
+  </div>
+
+  <!-- Designer Profiles -->
+  <div class="section">
+    <h2>👩‍🎨 Designers</h2>
+
+    <div class="profile">
+      <img src="https://via.placeholder.com/60">
+      <div class="profile-info">
+        <h4>Alex UI</h4>
+        <span class="tag">Figma</span>
+        <span class="tag">UX Research</span>
+        <p>$30/hr</p>
+      </div>
+    </div>
+
+    <div class="profile">
+      <img src="https://via.placeholder.com/60">
+      <div class="profile-info">
+        <h4>Jamie UX</h4>
+        <span class="tag">Wireframing</span>
+        <span class="tag">Prototyping</span>
+        <p>$25/hr</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proposal System -->
+  <div class="section">
+    <h2>✍️ Submit Proposal</h2>
+    <p><strong>Job:</strong> <span id="selectedJob">None</span></p>
+    <textarea id="proposalText" placeholder="Write your proposal..."></textarea>
+    <button class="submit" onclick="submitProposal()">Send Proposal</button>
+  </div>
+
+  <!-- Messaging -->
+  <div class="section">
+    <h2>💬 Messages</h2>
+
+    <div class="chat-box" id="chatBox">
+      <div class="message client">Client: Hello, are you available?</div>
+      <div class="message designer">Designer: Yes, I am!</div>
+    </div>
+
+    <input class="chat-input" id="chatInput" placeholder="Type a message..."
+           onkeypress="sendMessage(event)">
+  </div>
+
+</div>
+
+<script>
+let currentJob = "";
+
+function selectJob(job) {
+  currentJob = job;
+  document.getElementById("selectedJob").innerText = job;
+}
+
+function submitProposal() {
+  const text = document.getElementById("proposalText").value;
+  if (!currentJob || text.trim() === "") {
+    alert("Please select a job and write a proposal.");
+    return;
+  }
+  alert("Proposal sent for: " + currentJob);
+  document.getElementById("proposalText").value = "";
+}
+
+function sendMessage(event) {
+  if (event.key === "Enter") {
+    const input = document.getElementById("chatInput");
+    const msg = input.value.trim();
+    if (msg === "") return;
+
+    const chatBox = document.getElementById("chatBox");
+    const div = document.createElement("div");
+    div.className = "message designer";
+    div.innerText = "Designer: " + msg;
+    chatBox.appendChild(div);
+    input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+}
+</script>
+
+</body>
+</html>
