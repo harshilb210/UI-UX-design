@@ -1,0 +1,225 @@
+# UI-UX-design
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Restaurant Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8f8f8;
+    }
+
+    header {
+      background: #e63946;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .order-type {
+      text-align: center;
+      margin: 15px;
+    }
+
+    .order-type select {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    .categories {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .categories button {
+      padding: 10px 15px;
+      border: none;
+      background: #457b9d;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .categories button:hover {
+      background: #1d3557;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .item {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .item h3 {
+      margin: 10px 0;
+    }
+
+    .item button {
+      background: #2a9d8f;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .cart {
+      background: white;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .cart h2 {
+      margin-top: 0;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .total {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .place-order {
+      width: 100%;
+      padding: 12px;
+      background: #e63946;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🍽️ Digital Restaurant Menu</h1>
+</header>
+
+<div class="order-type">
+  <label><strong>Order Type:</strong></label>
+  <select id="orderType">
+    <option>Dine-In</option>
+    <option>Takeaway</option>
+  </select>
+</div>
+
+<div class="categories">
+  <button onclick="filterMenu('all')">All</button>
+  <button onclick="filterMenu('starter')">Starters</button>
+  <button onclick="filterMenu('main')">Main Course</button>
+  <button onclick="filterMenu('drink')">Drinks</button>
+</div>
+
+<div class="menu" id="menu"></div>
+
+<div class="cart">
+  <h2>🛒 Your Order</h2>
+  <div id="cartItems"></div>
+  <div class="total" id="total">Total: $0</div>
+  <button class="place-order" onclick="placeOrder()">Place Order</button>
+</div>
+
+<script>
+  const foodItems = [
+    { id: 1, name: "Spring Rolls", price: 5, category: "starter", img: "https://via.placeholder.com/300x200?text=Spring+Rolls" },
+    { id: 2, name: "Burger", price: 10, category: "main", img: "https://via.placeholder.com/300x200?text=Burger" },
+    { id: 3, name: "Pizza", price: 12, category: "main", img: "https://via.placeholder.com/300x200?text=Pizza" },
+    { id: 4, name: "Pasta", price: 11, category: "main", img: "https://via.placeholder.com/300x200?text=Pasta" },
+    { id: 5, name: "Cold Drink", price: 3, category: "drink", img: "https://via.placeholder.com/300x200?text=Drink" }
+  ];
+
+  let cart = [];
+
+  function displayMenu(items) {
+    const menu = document.getElementById("menu");
+    menu.innerHTML = "";
+    items.forEach(item => {
+      menu.innerHTML += `
+        <div class="item">
+          <img src="${item.img}">
+          <h3>${item.name}</h3>
+          <p>$${item.price}</p>
+          <button onclick="addToCart(${item.id})">Add to Cart</button>
+        </div>
+      `;
+    });
+  }
+
+  function filterMenu(category) {
+    if (category === "all") {
+      displayMenu(foodItems);
+    } else {
+      displayMenu(foodItems.filter(item => item.category === category));
+    }
+  }
+
+  function addToCart(id) {
+    const item = foodItems.find(i => i.id === id);
+    cart.push(item);
+    updateCart();
+  }
+
+  function updateCart() {
+    const cartItems = document.getElementById("cartItems");
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(item => {
+      total += item.price;
+      cartItems.innerHTML += `
+        <div class="cart-item">
+          <span>${item.name}</span>
+          <span>$${item.price}</span>
+        </div>
+      `;
+    });
+
+    document.getElementById("total").innerText = "Total: $" + total;
+  }
+
+  function placeOrder() {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    const orderType = document.getElementById("orderType").value;
+    alert("Order placed successfully! (" + orderType + ")");
+    cart = [];
+    updateCart();
+  }
+
+  displayMenu(foodItems);
+</script>
+
+</body>
+</html>
